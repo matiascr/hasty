@@ -1,7 +1,8 @@
 defmodule Hasty.Types.VarInt do
-  @moduledoc false
-
-  @type varint() :: binary()
+  @moduledoc """
+  Implements the variable-length integer specification of QUIC.
+  Refer to [RFC 9000: QUIC](https://www.rfc-editor.org/rfc/rfc9000.html#name-variable-length-integer-enc) for more details.
+  """
 
   @size_00 2 ** 6
   @size_01 2 ** 14
@@ -19,7 +20,7 @@ defmodule Hasty.Types.VarInt do
         iex> Hasty.Types.VarInt.length(<<0x81, 0x0C, 0xA0, 0x00>>)
         4
   """
-  @spec length(varint()) :: pos_integer()
+  @spec length(bitstring()) :: pos_integer()
   def length(<<0b00::2, _::bitstring>>), do: 1
   def length(<<0b01::2, _::bitstring>>), do: 2
   def length(<<0b10::2, _::bitstring>>), do: 4
@@ -54,10 +55,10 @@ defmodule Hasty.Types.VarInt do
         iex> decode(<<0b01::2, 64::14, 0x123::8>>)
         {64, <<0x123::8>>}
   """
-  @spec decode(varint()) :: {pos_integer(), binary()}
-  def decode(<<0b00::2, n::6, rest::binary>>), do: {n, rest}
-  def decode(<<0b01::2, n::14, rest::binary>>), do: {n, rest}
-  def decode(<<0b10::2, n::30, rest::binary>>), do: {n, rest}
-  def decode(<<0b11::2, n::62, rest::binary>>), do: {n, rest}
+  @spec decode(binary()) :: {pos_integer(), bitstring()}
+  def decode(<<0b00::2, n::6, rest::bitstring>>), do: {n, <<rest::bitstring>>}
+  def decode(<<0b01::2, n::14, rest::bitstring>>), do: {n, <<rest::bitstring>>}
+  def decode(<<0b10::2, n::30, rest::bitstring>>), do: {n, <<rest::bitstring>>}
+  def decode(<<0b11::2, n::62, rest::bitstring>>), do: {n, <<rest::bitstring>>}
   def decode(_), do: raise(ArgumentError)
 end
