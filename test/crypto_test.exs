@@ -36,7 +36,7 @@ defmodule CryptoTest do
     test "with default info" do
       len = 16
       key = Crypto.extract("secret", "")
-      output = Crypto.expand(key, len, "")
+      output = Crypto.expand(key, "", len)
 
       assert byte_size(output) === len
     end
@@ -44,7 +44,7 @@ defmodule CryptoTest do
     test "with provided info" do
       len = 16
       key = Crypto.extract("secret", "")
-      output = Crypto.expand(key, len, "message")
+      output = Crypto.expand(key, "message", len)
 
       assert byte_size(output) === len
     end
@@ -102,7 +102,7 @@ defmodule CryptoTest do
       key = Crypto.extract(ikm, salt)
       assert key === prk
 
-      output = Crypto.expand(prk, l, info)
+      output = Crypto.expand(prk, info, l)
       assert output === okm
     end
   end
