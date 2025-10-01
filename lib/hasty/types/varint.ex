@@ -55,7 +55,7 @@ defmodule Hasty.Types.VarInt do
         iex> decode(<<0b01::2, 64::14, 0x123::8>>)
         {64, <<0x123::8>>}
   """
-  @spec decode(binary()) :: {pos_integer(), bitstring()}
+  @spec decode(bitstring()) :: {pos_integer(), bitstring()}
   def decode(<<0b00::2, n::6, rest::bitstring>>), do: {n, <<rest::bitstring>>}
   def decode(<<0b01::2, n::14, rest::bitstring>>), do: {n, <<rest::bitstring>>}
   def decode(<<0b10::2, n::30, rest::bitstring>>), do: {n, <<rest::bitstring>>}
